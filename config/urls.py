@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from rest_framework_jwt.views import obtain_jwt_token
+from yangram import views
 
 urlpatterns = [
 
@@ -22,6 +23,7 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     path("images/", include("yangram.images.urls", namespace="images")),
     path('notifications/', include('yangram.notifications.urls', namespace='notifications')),
+    path("", views.ReactAppView.as_view()),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )
