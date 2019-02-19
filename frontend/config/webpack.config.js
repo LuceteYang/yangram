@@ -103,12 +103,15 @@ module.exports = function(webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
-      loaders.push({
-        loader: require.resolve(preProcessor),
-        options: {
-          sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
-        },
-      });
+      loaders.push(
+      preProcessor
+      // {
+      //   loader: require.resolve(preProcessor),
+      //   options: {
+      //     sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment,
+      //   },
+      // }
+      );
     }
     return loaders;
   };
@@ -428,7 +431,6 @@ module.exports = function(webpackEnv) {
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
-                  data:`@import "${paths.appSrc}/config/_variables.scss";`
                 },
                 'sass-loader'
               ),
@@ -450,8 +452,16 @@ module.exports = function(webpackEnv) {
                     : isEnvDevelopment,
                   modules: true,
                   getLocalIdent: getCSSModuleLocalIdent,
+                  data:`@import "${paths.appSrc}/config/_variables.scss";`,
+                  camelCase: "dashes",
                 },
-                'sass-loader'
+                {
+                  loader: require.resolve('sass-loader'),
+                  options: {
+                    data:`@import "${paths.appSrc}/config/_variables.scss";`,
+                    sourceMap: isEnvProduction && shouldUseSourceMap,
+                  }
+                }
               ),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.

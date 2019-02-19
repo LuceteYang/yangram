@@ -1,14 +1,11 @@
-import React, { Component } from 'react';
+import { connect } from "react-redux";
+import Container from "./container";
 
-import styles from './styles.modules.scss';
-
-class App extends Component {
-  render() {
-    return (
-      <div className={styles.App}>
-      </div>
-    );
-  }
-}
-
-export default App;
+const mapStateToProps = (state, ownProps) => {
+  const { user } = state;
+  return {
+    isLoggedIn: user.isLoggedIn
+  };
+};
+//컨테이너에 연결
+export default connect(mapStateToProps)(Container);
