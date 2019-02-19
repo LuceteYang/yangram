@@ -1,12 +1,45 @@
 // 스토어 설정/구성 
 // 이 스토어에서 여러 리듀서들을 합처줌
-import { createStore, combineReducers } from  "redux";
-import users from  './modules/users';
+import { createStore, combineReducers, applyMiddleware } from  "redux";
+import { routerMiddleware, connectRouter } from "connected-react-router";
+import createHistory from "history/createBrowserHistory";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+
+import { i18nState } from "redux-i18n";
+// import users from  './modules/users';
+import users from  'redux/modules/users';	//절대경로 적용후
+
+
+const env = process.env.NODE_ENV;
+// histroy 생성
+const history = createHistory();
+
+// 리액트 라우터 리덕스랑 히스토리가 싱크되어야함
+const middlewares = [thunk, routerMiddleware(history)];
+
+if(env === "development"){
+	const {logger } = require("redux-logger");
+	middlewares.push(logger);
+}
+
+
 
 const reducer = combineReducers({
-	users
+	users,
+	router: connectRouter(history),
+	i18nState
 })
+let store;
+if(env === "development"){
+	store = initialState =>
+ createStore(reducer, composeWithDevTools(applyMiddleware(...middlewares)));
+}else{
+	store = initialState =>
+ createStore(reducer, applyMiddleware(...middlewares));
+}
 
-let store = initialState => createStore(reducer);
+
+export { history };
 
 export default store();
