@@ -2,7 +2,11 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "proxy":"http://localhost:8000/",
+=======
+  "proxy": "http://localhost:8000/",
+>>>>>>> a26719cc8c0e86697c142894d364778ec8ff97f0
   "dependencies": {
     "@babel/core": "7.2.2",
     "@svgr/webpack": "4.1.0",
@@ -71,9 +75,13 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
+<<<<<<< HEAD
     "build": "node scripts/build.js",
     "extract": "i18n_extract",
     "import": "i18n_import --encoding=utf-8"
+=======
+    "build": "node scripts/build.js"
+>>>>>>> a26719cc8c0e86697c142894d364778ec8ff97f0
   },
   "eslintConfig": {
     "extends": "react-app"
