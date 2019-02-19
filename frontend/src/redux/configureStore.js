@@ -8,7 +8,7 @@ import thunk from "redux-thunk";
 
 import { i18nState } from "redux-i18n";
 // import users from  './modules/users';
-import users from  'redux/modules/users';	//절대경로 적용후
+import user from  'redux/modules/user';	//절대경로 적용후
 
 
 const env = process.env.NODE_ENV;
@@ -26,7 +26,7 @@ if(env === "development"){
 
 
 const reducer = combineReducers({
-	users,
+	user,
 	router: connectRouter(history),
 	i18nState
 })
