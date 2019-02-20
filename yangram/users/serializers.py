@@ -8,14 +8,24 @@ from yangram.images import serializers as images_serializers
 
 class ListUserSerializer(serializers.ModelSerializer):
 
+    following = serializers.SerializerMethodField()  #시리얼라이저의 함수 사용
+
     class Meta:
         model = models.User
         fields = (
             'id',
             'profile_image',
             'username',
-            'name'
+            'name',
+            'following'
         )
+    #get_~~~
+    def get_following(self, obj):
+        if 'request' in self.context:
+            request = self.context['request']
+            if obj in request.user.following.all():
+                return True
+        return False
 
 class UserProfileSerializer(serializers.ModelSerializer):
 

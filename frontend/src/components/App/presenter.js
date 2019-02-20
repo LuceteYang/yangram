@@ -6,6 +6,9 @@ import Auth from "components/Auth";
 import Footer from "components/Footer";
 import Navigation from "components/Navigation";
 import Feed from "components/Feed";
+import Explore from "components/Explore";
+import Search from "components/Search";
+
 
 const App = props => [
   //Nav,
@@ -22,7 +25,8 @@ App.propTypes = {
 const PrivateRoutes = props => (
   <Switch>
     <Route exact path="/" component={Feed} />
-    <Route path="/explore" render={() => "explore"} />
+    <Route path="/explore" component={Explore} />
+    <Route path="/search/:searchTerm" component={Search} />
   </Switch>
 );
 

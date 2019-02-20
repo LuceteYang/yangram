@@ -40,7 +40,7 @@ class Images(APIView):
 
         user = request.user  
 
-        serializer = serializers.ImageSerializer(image) # field중 꼭 다 채워야 되지 않게됨
+        serializer = serializers.InputImageSerializer(image) # field중 꼭 다 채워야 되지 않게됨
         if serializer.is_valid():
             serializer.save(creator=user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -59,7 +59,7 @@ class LikeImage(APIView):
 
         users = user_models.User.objects.filter(id__in=like_creators_ids)
 
-        serializer = user_serializers.ListUserSerializer(users, many=True)
+        serializer = user_serializers.ListUserSerializer(users, many=True, context={"request": request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 

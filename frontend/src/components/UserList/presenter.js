@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 import Loading from "components/Loading";
 import Ionicon from "react-ionicons";
-import UserRow from "components/UserRow";
+import UserDisplay from "components/UserDisplay";
 
 const UserList = props => (
   <div className={styles.container}>
@@ -20,8 +20,11 @@ const UserList = props => (
     </div>
   </div>
 );
+
 const RenderUsers = props =>
-  props.list.map(user => <UserRow user={user} key={user.id} />);
+  props.list.map(user => (
+    <UserDisplay horizontal={true} user={user} key={user.id} />
+  ));
 
 RenderUsers.propTypes = {
   list: PropTypes.array
