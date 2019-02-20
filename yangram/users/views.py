@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import models, serializers
 from yangram.notifications import views as notification_views
-
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
 
 class ExploreUsers(APIView):
 
@@ -79,7 +80,7 @@ class UserProfile(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         elif found_user.username != user.username:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         else:
             serializer = serializers.UserProfileSerializer(found_user, data=request.data, partial=True) # field중 꼭 다 채워야 되지 않게됨
@@ -147,7 +148,7 @@ class ChangePassword(APIView):
         user = request.user
 
         if user.username != username:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         current_password = request.data.get('current_password', None)
 
@@ -172,7 +173,8 @@ class ChangePassword(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-            
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
 
 
                 

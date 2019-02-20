@@ -14,24 +14,24 @@ class FeedUserSerializer(serializers.ModelSerializer):
 
 class SmallImageSerializer(serializers.ModelSerializer):
 
-    """ Used for the notifications """
+	""" Used for the notifications """
 
-    class Meta:
-        model = models.Image
-        fields = (
-            'file',
-        )
+	class Meta:
+		model = models.Image
+		fields = (
+			'file',
+		)
 
 class CountImageSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = models.Image
-        fields = (
-            'id',
-            'file',
-            'comment_count',
-            'like_count'
-        )
+	class Meta:
+		model = models.Image
+		fields = (
+			'id',
+			'file',
+			'comment_count',
+			'like_count'
+		)
 
 class CommentSerializer(serializers.ModelSerializer):
 	
@@ -51,8 +51,8 @@ class LikeSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = models.Like
 		fields = (
-            'creator',
-        )
+			'creator',
+		)
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -60,21 +60,33 @@ class ImageSerializer(serializers.ModelSerializer):
 	comments = CommentSerializer(many=True)
 	creator = FeedUserSerializer()
 	tags = TagListSerializerField()
+	is_liked = serializers.SerializerMethodField()	#시리얼라이저의 함수 사용
 
 	class Meta:
 		model = models.Image
 		fields = (
-        	'id',
-        	'file',
-        	'location',
-        	'caption',
-        	'creator',
-        	'comments',
-        	'like_count',
-            'creator',
-            'created_at',
-            'tags'
-    	)
+			'id',
+			'file',
+			'location',
+			'caption',
+			'creator',
+			'comments',
+			'like_count',
+			'creator',
+			'natural_time',
+			'tags',
+			'is_liked'
+		)
+	#get_~~~
+	def get_is_liked(self, obj):
+		if 'request' in self.context:
+			request = self.context['request']
+			try:
+				models.Like.objects.get(creator__id=request.user.id, image__id=obj.id)
+				return True
+			except models.Like.DoesNotExist:
+				return False
+		return False
 
 class InputImageSerializer(serializers.ModelSerializer):
 
@@ -82,8 +94,8 @@ class InputImageSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = models.Image
 		fields = (
-        	'file',
-        	'location',
-        	'caption',
-    	)
+			'file',
+			'location',
+			'caption',
+		)
 

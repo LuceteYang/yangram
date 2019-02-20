@@ -32,7 +32,7 @@ class Images(APIView):
         sorted_list = sorted(image_list, key=lambda x: x.created_at, reverse=True)
 
 
-        serializer = serializers.ImageSerializer(sorted_list, many=True)
+        serializer = serializers.ImageSerializer(sorted_list, many=True, context={'request': request})
 
         return Response(data=serializer.data)
 
@@ -40,7 +40,7 @@ class Images(APIView):
 
         user = request.user  
 
-        serializer = serializers.InputImageSerializer(data=request.data) # field중 꼭 다 채워야 되지 않게됨
+        serializer = serializers.ImageSerializer(image) # field중 꼭 다 채워야 되지 않게됨
         if serializer.is_valid():
             serializer.save(creator=user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -130,7 +130,8 @@ class CommentOnImage(APIView):
         if serializer.is_valid():
 
             serializer.save(creator=user, image=found_image)
-
+            notification_views.create_notification(
+                user, found_image.creator, 'comment', found_image, serializer.data['message'])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         else:
@@ -197,7 +198,7 @@ class ImageDetail(APIView):
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = serializers.ImageSerializer(image)
+        serializer = serializers.ImageSerializer(image, context={'request': request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -207,7 +208,7 @@ class ImageDetail(APIView):
 
         image = self.find_own_image(image_id, user)
         if image is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         serializer = serializers.InputImageSerializer(image, data=request.data, partial=True) # field중 꼭 다 채워야 되지 않게됨
 
@@ -228,7 +229,7 @@ class ImageDetail(APIView):
 
         image = self.find_own_image(image_id, user)
         if image is None:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         image.delete()
 

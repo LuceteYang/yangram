@@ -10,9 +10,26 @@ class AccountAdapter(DefaultAccountAdapter):
 
     def is_open_for_signup(self, request: HttpRequest):
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
-
+    
+    def save_user(self, request, user, form):
+        if len(user.socialaccount_set.all()) == 0:
+            name = request.data.get('name', None)
+            email = request.data.get('email', None)
+            username = request.data.get('username', None)
+            password1 = request.data.get('password1', None)
+            password2 = request.data.get('password2', None)
+            user.name = name
+            user.email = email
+            user.username = username
+            if(password1 == password2):
+                user.set_password(password1)
+            user.save()
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
+    def is_open_for_signup(self, request, sociallogin):
+        return getattr(settings, 'ACCOUNT_ALLOW_REGISTRATION', True)
 
-    def is_open_for_signup(self, request: HttpRequest, sociallogin: Any):
-        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
+    # 이거 계정 첫 로그인시 하면 에러나고 가입후 해야함
+    # def pre_social_login(self, request, sociallogin):
+    #     print(dir(sociallogin))
+    #     print(sociallogin.email_addresses, sociallogin.account)
