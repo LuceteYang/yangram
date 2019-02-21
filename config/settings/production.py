@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ["*"]
 # DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)  # noqa F405
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': env('RDS_DB_NAME'),
         'USER': env('RDS_DB_USERNAME'),
         'PASSWORD': env('RDS_DB_PASSWORD'),
