@@ -23,3 +23,5 @@ django-rest-auth==0.9.3
 django-taggit==0.23.0
 django-taggit-serializer==0.1.7
 pymysql==0.9.3
+django-mysql==2.4.1
+mysqlclient==1.4.2.post1

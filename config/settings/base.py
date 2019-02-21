@@ -40,12 +40,21 @@ USE_TZ = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'NAME',
         'USER': 'USER',
         'PASSWORD': 'PASSWORD',
         'HOST': 'localhost',
         'PORT': '5432',
+        'OPTIONS': {
+            # Tell MySQLdb to connect with 'utf8mb4' character set
+            'charset': 'utf8mb4',
+        },
+        # Tell Django to build the test database with the 'utf8mb4' character set
+        'TEST': {
+            'CHARSET': 'utf8mb4',
+            'COLLATION': 'utf8mb4_unicode_ci',
+        }
     }
 }
 # 'default': env.db('DATABASE_URL', default='postgres:///yangram'),
@@ -82,6 +91,7 @@ THIRD_PARTY_APPS = [
     'rest_auth',  # rest auth
     'rest_auth.registration',  # enable registration
     'corsheaders', # To accept requests from React
+    'django_mysql'
 ]
 LOCAL_APPS = [
     'yangram.users.apps.UsersAppConfig',
