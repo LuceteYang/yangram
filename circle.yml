@@ -1,8 +1,11 @@
-dependencies:
-    pre:
-      - pip install awsebcli
-deployment:
-  production:
-    branch: master
-    commands:
+version: 2
+workflows:
+  version: 2
+  precompile_assets:
+    - run: pip install awsebcli
+  build_and_test:
+    jobs:
       - eb deploy
+          filters:
+            branches:
+              only: master
