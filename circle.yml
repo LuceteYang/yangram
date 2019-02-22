@@ -1,11 +1,12 @@
 version: 2
-workflows:
-  version: 2
+jobs:
   precompile_assets:
     - run: pip install awsebcli
-  build_and_test:
+  deploy:
+    - eb deploy
+workflows:
+  version: 2
+  compile_and_deploy:
     jobs:
-      - eb deploy
-          filters:
-            branches:
-              only: master
+      - precompile_assets
+      - deploy
