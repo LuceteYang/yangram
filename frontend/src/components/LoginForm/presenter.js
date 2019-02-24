@@ -41,6 +41,7 @@ const LoginForm = (props, context) => (
       <Ionicon icon="logo-facebook" fontSize="20px" color="#385185" />{" "}
       {context.t("Log in with Facebook")}
     </FacebookLogin>
+    <span styles={{display: props.errorMessage ? 'block':'none'}} className={formStyles.errorMessage}>{props.errorMessage}</span>
     <span className={formStyles.forgotLink}>
       {context.t("Forgot password?")}
     </span>
@@ -51,7 +52,8 @@ LoginForm.propTypes = {
   usernameValue: PropTypes.string.isRequired,
   passwordValue: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleFacebookLogin: PropTypes.func.isRequired
+  handleFacebookLogin: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string.isRequired
 };
 
 LoginForm.contextTypes = {

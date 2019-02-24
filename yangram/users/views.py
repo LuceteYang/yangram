@@ -30,6 +30,8 @@ class FollowUser(APIView):
 
         user.save()
 
+        # notification_views.create_notification(user, user_to_follow, 'follow')
+
         return Response(status=status.HTTP_200_OK)
 
 
@@ -66,7 +68,7 @@ class UserProfile(APIView):
         if found_user is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
-        serializer = serializers.UserProfileSerializer(found_user)
+        serializer = serializers.UserProfileSerializer(found_user, context={'request': request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -94,52 +96,53 @@ class UserProfile(APIView):
 
 class UserFollowers(APIView):
 
-	def get(self, request, username, format=None):
+    def get(self, request, username, format=None):
 
-		user = request.user
+        user = request.user
 
-		try:
-			found_user = models.User.objects.get(username=username)
-		except models.User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            found_user = models.User.objects.get(username=username)
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-		user_folllowers = found_user.followers.all()
+        user_folllowers = found_user.followers.all()
 
-		serializer = serializers.ListUserSerializer(user_folllowers, many=True)
+        serializer = serializers.ListUserSerializer(user_folllowers, many=True)
 
 
-		return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 class UserFollowing(APIView):
 
-	def get(self, request, username, format=None):
+    def get(self, request, username, format=None):
 
-		user = request.user
+        user = request.user
 
-		try:
-			found_user = models.User.objects.get(username=username)
-		except models.User.DoesNotExist:
-			return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            found_user = models.User.objects.get(username=username)
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-		user_following = found_user.following.all()
+        user_following = found_user.following.all()
 
-		serializer = serializers.ListUserSerializer(user_following, many=True)
+        serializer = serializers.ListUserSerializer(user_following, many=True)
 
 
-		return Response(data=serializer.data,status=status.HTTP_200_OK)
+        return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 class Search(APIView):
 
-	def get(self, request, format=None):
-		username = request.query_params.get('username',None)
+    def get(self, request, format=None):
+        username = request.query_params.get('username',None)
 
-		if username is None:
-			return Response(status=status.HTTP_400_BAD_REQUEST)
+        if username is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-		users = models.User.objects.filter(username__contains=username)
+        # users = models.User.objects.filter(username__contains=username)
+        users = models.User.objects.filter(username__istartswith=username)
 
-		serializer = serializers.ListUserSerializer(users, many=True, context={"request": request})
-		return Response(data=serializer.data, status=status.HTTP_200_OK)
+        serializer = serializers.ListUserSerializer(users, many=True, context={"request": request})
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class ChangePassword(APIView):
     def put(self, request,username, format=None):

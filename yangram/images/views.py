@@ -13,6 +13,14 @@ class Images(APIView):
 
         user = request.user
 
+        images = models.Image.objects.all()
+
+        serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
+
+        return Response(data=serializer.data)
+
+        ## 임시로 다뿌리는걸로 변경
+
         following_users = user.following.all()
 
         image_list = []
@@ -172,12 +180,12 @@ class Search(APIView):
     def get(self, request, format=None):
         hashtags = request.query_params.get('hashtags',None)
         if hashtags is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            images = models.Image.objects.all()[:20]
+        else:    
+            hashtags = hashtags.split(",")
+            images = models.Image.objects.filter(tags_ㄹ_name__in=hashtags).distinct()
 
-        hashtags = hashtags.split(",")
-        images = models.Image.objects.filter(tags__name__in=hashtags).distinct()
-
-        serializer = serializers.CountImageSerializer(images, many=True)
+        serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 class ImageDetail(APIView):

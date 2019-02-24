@@ -15,12 +15,12 @@ class Container extends Component {
     const { searchByTerm } = this.props;
     searchByTerm();
   }
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate = (prevProps, prevState) => {
     const { searchByTerm } = this.props;
     if (prevProps.match.params !== this.props.match.params) {
       searchByTerm();
     }
-  }
+  };
 
   componentWillReceiveProps = nextProps => {
     const { searchByTerm, pathname } = this.props;

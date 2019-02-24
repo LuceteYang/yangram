@@ -61,7 +61,7 @@
     align-items: center;
     color: #385185;
     justify-content: center;
-    margin-bottom: 25px;
+    margin-bottom: 8px;
     cursor: pointer;
     background-color: white;
     border: 0;
@@ -75,7 +75,13 @@
       outline: none;
     }
   }
+  .error-message {
+    margin: 10px;
+    font-size: $normal-font-size;
+    color: $red-color;
+  }
   .forgot-link {
+    margin: 12px;
     font-size: $small-font-size;
     color: $dark-blue;
   }

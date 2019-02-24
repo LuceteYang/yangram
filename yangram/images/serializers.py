@@ -9,7 +9,13 @@ class FeedUserSerializer(serializers.ModelSerializer):
 		model = user_model.User
 		fields = (
 			'username',
-			'profile_image'
+			'profile_image',
+            'name',
+            'bio',
+            'website',
+            'post_count',
+            'followers_count',
+            'following_count',
 		)
 
 class SmallImageSerializer(serializers.ModelSerializer):
@@ -50,9 +56,7 @@ class LikeSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = models.Like
-		fields = (
-			'creator',
-		)
+		fields = '__all__'
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -75,7 +79,8 @@ class ImageSerializer(serializers.ModelSerializer):
 			'creator',
 			'natural_time',
 			'tags',
-			'is_liked'
+			'is_liked',
+            'is_vertical'
 		)
 	#get_~~~
 	def get_is_liked(self, obj):
@@ -97,5 +102,6 @@ class InputImageSerializer(serializers.ModelSerializer):
 			'file',
 			'location',
 			'caption',
+            'tags'
 		)
 
