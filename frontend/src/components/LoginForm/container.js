@@ -6,21 +6,30 @@ class Container extends Component {
   state = {
     username: "",
     password: "",
-    errorMessage:""
+    errorExist: false
   };
   static propTypes = {
     facebookLogin: PropTypes.func.isRequired,
-    usernameLogin: PropTypes.func.isRequired
+    usernameLogin: PropTypes.func.isRequired,
+    newErrorExist: PropTypes.bool.isRequired,
+  };
+  componentWillReceiveProps = nextProps => {
+    const { newErrorExist } = nextProps;
+    if(newErrorExist){
+      this.setState({
+        errorExist: true
+      });
+    }
   };
   render() {
-    const { username, password, errorMessage } = this.state;
+    const { username, password, errorExist } = this.state;
     return (
       <LoginForm
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
         usernameValue={username}
         passwordValue={password}
-        errorMessage={errorMessage}
+        errorExist={errorExist}
         handleFacebookLogin={this._handleFacebookLogin}
         handleUsernameLogin={this._handleUsernameLogin}
       />
@@ -36,6 +45,16 @@ class Container extends Component {
     const { usernameLogin } = this.props;
     const { username, password } = this.state;
     event.preventDefault();
+    if(!username || !password){
+      return this.setState({
+        errorExist: true
+      });
+    }
+    if(password.length<8){
+      return this.setState({
+        errorExist: true
+      });
+    }
     usernameLogin(username, password);
   };
   _handleFacebookLogin = response => {

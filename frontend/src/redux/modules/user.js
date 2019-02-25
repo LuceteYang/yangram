@@ -10,8 +10,16 @@ const FOLLOW_USER = "FOLLOW_USER";
 const UNFOLLOW_USER = "UNFOLLOW_USER";
 const SET_EXPLORE = "SET_EXPLORE";
 const SET_IMAGE_LIST = "SET_IMAGE_LIST";
+const SET_AUTH_ERROR = "SET_AUTH_ERROR";
 
 // action crators
+
+function saveAuthError(preload) {
+  return {
+    type: SET_AUTH_ERROR,
+    preload
+  };
+}
 
 function saveToken(token) {
   return {
@@ -101,9 +109,13 @@ function usernameLogin(username, password) {
       .then(json => {
         if (json.token) {
           dispatch(saveToken(json.token));
+        }else{
+          dispatch(saveAuthError(json));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err)
+      });
   };
 }
 function createAccount(username, password, email, name) {
@@ -125,6 +137,8 @@ function createAccount(username, password, email, name) {
       .then(json => {
         if (json.token) {
           dispatch(saveToken(json.token));
+        }else{
+          dispatch(saveAuthError(json));
         }
       })
   }
@@ -279,6 +293,8 @@ function reducer(state = initialState, action){
       return applySetExplore(state, action);
     case SET_IMAGE_LIST:
       return applySetImageList(state, action);
+    case SET_AUTH_ERROR:
+      return applySetAuthError(state, action);
 		default:
 			return state;
 	}
@@ -349,6 +365,14 @@ function applySetImageList(state, action) {
     ...state,
     imageList
   };
+}
+
+function applySetAuthError(state, action){
+  const { preload } = action;
+  return {
+    ...state,
+    authError:preload
+  }
 }
 
 

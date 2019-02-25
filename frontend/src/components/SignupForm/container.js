@@ -7,14 +7,24 @@ class Container extends Component {
     email: "",
     name: "",
     username: "",
-    password: ""
+    password: "",
+    errorMessage:""
   };
   static propTypes = {
     facebookLogin: PropTypes.func.isRequired,
     createAccount: PropTypes.func.isRequired
   };
+  // {"username":["This field may not be blank."],"name":["This field may not be blank."]}
+  componentWillReceiveProps = nextProps => {
+    const { errorMessage } = nextProps;
+    if(errorMessage){
+      this.setState({
+        errorMessage: errorMessage
+      });
+    }
+  };
   render() {
-    const { email, name, username, password } = this.state;
+    const { email, name, username, password, errorMessage } = this.state;
     return (
       <SignupForm
         emailValue={email}
@@ -23,6 +33,7 @@ class Container extends Component {
         passwordValue={password}
         handleInputChange={this._handleInputChange}
         handleSubmit={this._handleSubmit}
+        errorMessage={errorMessage}
         handleFacebookLogin={this._handleFacebookLogin}
       />
     );
@@ -37,6 +48,34 @@ class Container extends Component {
     const { username, password, email, name } = this.state;
     const { createAccount } = this.props;
     event.preventDefault();
+    var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(!emailReg.test(email)){
+      return this.setState({
+        errorMessage: "Enter a valid email address."
+      });
+    }
+    if(!password){
+       this.setState({
+        errorMessage: "This password is too short. It must contain at least 8 characters."
+      });
+       return
+    }
+    if(password.length<8){
+      this.setState({
+        errorMessage: "This password is too short. It must contain at least 8 characters."
+      });
+      return
+    }
+    if(!username){
+      return this.setState({
+        errorMessage: "username may not be blank."
+      });
+    }
+    if(!name){
+      return this.setState({
+        errorMessage: "name may not be blank."
+      });
+    }
     createAccount(username, password, email, name);
   };
   _handleFacebookLogin = response => {

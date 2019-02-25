@@ -58,6 +58,7 @@ const SignupForm = (props, context) => (
         onChange={props.handleInputChange}
       />
     </form>
+    <span style={{display: props.errorMessage ? 'block':'none'}} className={formStyles.errorMessage}>{props.errorMessage}</span>
     <p className={formStyles.terms}>
       {context.t("By signing up, you agree to our ")}
       <span>{context.t("Terms & Privacy Policy")}</span>.
@@ -72,7 +73,8 @@ SignupForm.propTypes = {
   passwordValue: PropTypes.string.isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleFacebookLogin: PropTypes.func.isRequired
+  handleFacebookLogin: PropTypes.func.isRequired,
+  errorMessage:PropTypes.string.isRequired
 };
 
 SignupForm.contextTypes = {

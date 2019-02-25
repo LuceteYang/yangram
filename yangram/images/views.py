@@ -183,7 +183,7 @@ class Search(APIView):
             images = models.Image.objects.all()[:20]
         else:    
             hashtags = hashtags.split(",")
-            images = models.Image.objects.filter(tags_ㄹ_name__in=hashtags).distinct()
+            images = models.Image.objects.filter(tags__name__in=hashtags).distinct()
 
         serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)

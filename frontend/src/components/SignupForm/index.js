@@ -2,6 +2,18 @@ import { connect } from "react-redux";
 import Container from "./container";
 import { actionCreators as userActions } from "redux/modules/user";
 
+const mapStateToProps = (state, ownProps) => {
+  const { user:{authError} } = state;
+  let errorMessage = ""
+  if(authError){
+    var keys = Object.keys(authError)
+    errorMessage = authError[keys[0]][0]|| "check fields";
+  }
+  return {
+    errorMessage
+  };
+};
+
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     facebookLogin: access_token => {
@@ -13,4 +25,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Container);
+export default connect(mapStateToProps, mapDispatchToProps)(Container);

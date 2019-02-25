@@ -6,6 +6,7 @@
   .form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 8px;
     input[type="submit"] {
       margin-top: 10px;
     }
@@ -94,7 +95,7 @@
   .terms {
     width: 80%;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 10px;
     line-height: 20px;
     color: $dark-grey;
     span {
