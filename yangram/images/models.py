@@ -2,6 +2,8 @@ from django.db import models
 from yangram.users import models as user_models
 from taggit.managers import TaggableManager
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Transpose
 
 
 class TimeStampedModel(models.Model):
@@ -16,7 +18,11 @@ class TimeStampedModel(models.Model):
 
 class Image(TimeStampedModel):
 
-    file = models.ImageField()
+    file = ProcessedImageField(processors=[
+                                   Transpose()
+                               ],
+                           format='JPEG',
+                           options={'quality': 50})
     location = models.CharField(max_length=140)
     caption = models.TextField()
     creator = models.ForeignKey(user_models.User, null=True, on_delete=models.CASCADE, related_name="images")

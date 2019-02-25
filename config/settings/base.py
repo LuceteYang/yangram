@@ -17,7 +17,7 @@ if READ_DOT_ENV_FILE:
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', False)
+DEBUG = env.bool('DJANGO_DEBUG', True)
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -40,21 +40,12 @@ USE_TZ = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'NAME',
         'USER': 'USER',
         'PASSWORD': 'PASSWORD',
         'HOST': 'localhost',
         'PORT': '5432',
-        'OPTIONS': {
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': 'utf8mb4',
-        },
-        # Tell Django to build the test database with the 'utf8mb4' character set
-        'TEST': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
-        }
     }
 }
 # 'default': env.db('DATABASE_URL', default='postgres:///yangram'),
@@ -91,7 +82,8 @@ THIRD_PARTY_APPS = [
     'rest_auth',  # rest auth
     'rest_auth.registration',  # enable registration
     'corsheaders', # To accept requests from React
-    'django_mysql'
+    'django_mysql',
+    'imagekit'  # to optimize image
 ]
 LOCAL_APPS = [
     'yangram.users.apps.UsersAppConfig',
@@ -337,4 +329,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'yangram.users.serializers.SignUpSerializer'
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'yangram.users.serializers.UserProfileSerializer'
 }
