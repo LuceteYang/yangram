@@ -118,8 +118,8 @@ COLLECTFAST_ENABLED = True
 
 # endregion
 # DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3Boto3Storage'
-# MEDIA_URL = 'https://societyang.xyz/media/'
-MEDIA_URL = 'http://localhost/media/'
+MEDIA_URL = 'https://societyang.xyz/media/'
+# MEDIA_URL = 'http://localhost/media/'
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
