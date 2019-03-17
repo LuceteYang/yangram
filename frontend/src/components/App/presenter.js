@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { Route, Switch } from "react-router-dom";
 import styles from "./styles.module.scss";
@@ -11,12 +11,12 @@ import Search from "components/Search";
 import Profile from "components/Profile";
 
 
-const App = props => [
-  //Nav,
-  props.isLoggedIn ? <Navigation key={1} /> : null,
-  props.isLoggedIn ? <PrivateRoutes key={2} /> : <PublicRoutes key={2} />,
-  <Footer key={3} />
-];
+const App = props => (
+  <Fragment>
+    {props.isLoggedIn ? <Fragment><Navigation /><PrivateRoutes /></Fragment> : <PublicRoutes/>}
+    <Footer />
+  </Fragment>
+);
 
 App.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired
