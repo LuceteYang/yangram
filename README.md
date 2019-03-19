@@ -10,7 +10,7 @@ Cloning Instagram with Python Django
 
 ## Site
 
-Link: [https://yangram.keywordyang.xyz](https://yangram.keywordyang.xyz)
+Link: [https://yangram.societyang.xyz](https://yangram.societyang.xyz)
 
 ## Libraries / Tools
 

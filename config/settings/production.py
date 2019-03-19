@@ -90,7 +90,7 @@ CACHES = {
 # AWS_S3_OBJECT_PARAMETERS = {
     # 'CacheControl': f'max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate',
 # }
-# AWS_S3_CUSTOM_DOMAIN = 'img.keywordyang.xyz'
+# AWS_S3_CUSTOM_DOMAIN = 'img.societyang.xyz'
 
 # STATIC
 # ------------------------
@@ -118,7 +118,7 @@ COLLECTFAST_ENABLED = True
 
 # endregion
 # DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3Boto3Storage'
-MEDIA_URL = 'https://yangram.keywordyang.xyz/media/'
+MEDIA_URL = 'https://yangram.societyang.xyz/media/'
 # MEDIA_URL = 'http://localhost/media/'
 
 # TEMPLATES
@@ -139,7 +139,7 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 # DEFAULT_FROM_EMAIL = env(
 #     'DJANGO_DEFAULT_FROM_EMAIL',
-#     default='Yangram <noreply@keywordyang.xyz>'
+#     default='Yangram <noreply@societyang.xyz>'
 # )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 # SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
