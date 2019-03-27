@@ -9,7 +9,7 @@ APPS_DIR = ROOT_DIR.path('yangram')
 
 env = environ.Env()
 
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
     env.read_env(str(ROOT_DIR.path('.env')))
@@ -34,22 +34,7 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
 
-# DATABASES
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'NAME',
-        'USER': 'USER',
-        'PASSWORD': 'PASSWORD',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-# 'default': env.db('DATABASE_URL', default='postgres:///yangram'),
-DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -58,6 +43,15 @@ ROOT_URLCONF = 'config.urls'
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = 'config.wsgi.application'
 
+ASGI_APPLICATION = 'config.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
@@ -83,11 +77,13 @@ THIRD_PARTY_APPS = [
     'rest_auth.registration',  # enable registration
     'corsheaders', # To accept requests from React
     'django_mysql',
-    'imagekit'  # to optimize image
+    'imagekit',  # to optimize image
+    'channels',
 ]
 LOCAL_APPS = [
     'yangram.users.apps.UsersAppConfig',
     'yangram.images.apps.ImagesConfig',
+    'yangram.conversations.apps.ConversationsConfig',
     'yangram.notifications.apps.NotificationsConfig'
     # Your stuff: custom apps go here
 ]

@@ -22,6 +22,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("images/", include("yangram.images.urls", namespace="images")),
+    path("conversations/", include("yangram.conversations.urls", namespace="conversations")),
     path('notifications/', include('yangram.notifications.urls', namespace='notifications')),
     path("", views.ReactAppView.as_view()),
 ] + static(
