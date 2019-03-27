@@ -10,7 +10,7 @@ SELECT cmi.conversation_id                   AS conversation_id,
 FROM   (SELECT p.conversation_id, 
                Max(p.last_read_date)                      AS last_read_date, 
                Max(m.id)                                  AS message_id, 
-               (SELECT Json_arrayagg(Json_object('name', u.name, 
+               (SELECT Json_arrayagg(Json_object('username', u.username, 
                                      'profile_image', 
                                              u.profile_image)) AS 
                        conversation_user_list 
@@ -49,7 +49,7 @@ SELECT cmi.conversation_id        AS conversation_id,
        cmi.conversation_user_list AS conversation_user_list 
 FROM   (SELECT p.conversation_id, 
                Max(m.id)                                  AS message_id, 
-               (SELECT Json_arrayagg(Json_object('name', u.name, 
+               (SELECT Json_arrayagg(Json_object('username', u.username, 
                                      'profile_image', 
                                              u.profile_image)) AS 
                        conversation_user_list 

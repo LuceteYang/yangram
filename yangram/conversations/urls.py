@@ -5,8 +5,8 @@ app_name = 'conversations'
 
 urlpatterns = [
 	path('', view=views.Conversations, name="conversations"),
-	# path('search/', view=views.SearchConversations, name="conversation_search"),
-	# path('<int:conversation_id>/', view=views.ConversationDetail, name="conversation_detail"),
-	# path('<int:conversation_id>/messages/', view=views.ConversationMessage, name="conversation_messages"),
+	path('search/', view=views.SearchConversations, name="conversation_search"),
 	path('test/', views.room, name='room'),
+	# path('<int:conversation_id>/', view=views.ConversationDetail, name="conversation_detail"),
+	path('<int:conversation_id>/messages/', view=views.ConversationMessage, name="conversation_messages"),
 ]
