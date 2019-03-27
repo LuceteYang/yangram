@@ -3,7 +3,7 @@
   @include boxBorder(no);
   display: flex;
   justify-content: center;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
   @include breakpoint("phone") {
     margin-bottom: 0;
   }
