@@ -1,17 +1,23 @@
 import { connect } from "react-redux";
-import { actionCreators as userActions } from "redux/modules/user";
+import { actionCreators as chatActions } from "redux/modules/chat";
 import Container from "./container";
-import { push } from "react-router-redux";
 
-
+const mapStateToProps = (state, ownProps) => {
+  const { chat: { conversations } } = state;
+  return {
+    conversations
+  };
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-	
   return {
-    logout: () => {
-      dispatch(userActions.logout());
-      dispatch(push('/'));
+    getConversationList: (page) => {
+      dispatch(chatActions.getConversationList(page));
+    },
+    getSearchConversation: (msg) => {
+      dispatch(chatActions.getSearchConversation(msg));
     }
   };
 };
-export default connect(null, mapDispatchToProps)(Container);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Container);

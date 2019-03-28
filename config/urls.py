@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -24,11 +24,12 @@ urlpatterns = [
     path("images/", include("yangram.images.urls", namespace="images")),
     path("conversations/", include("yangram.conversations.urls", namespace="conversations")),
     path('notifications/', include('yangram.notifications.urls', namespace='notifications')),
-    path("", views.ReactAppView.as_view()),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )
-
+urlpatterns += [
+    re_path(r'^', views.ReactAppView.as_view()),
+]
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.

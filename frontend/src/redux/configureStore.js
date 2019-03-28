@@ -10,6 +10,7 @@ import { i18nState } from "redux-i18n";
 // import users from  './modules/users';
 import user from  'redux/modules/user';	//절대경로 적용후
 import photos from "redux/modules/photos";
+import chat from "redux/modules/chat";
 
 
 const env = process.env.NODE_ENV;
@@ -29,6 +30,7 @@ if(env === "development"){
 const reducer = combineReducers({
 	user,
     photos,
+    chat,
 	router: connectRouter(history),
 	i18nState
 })

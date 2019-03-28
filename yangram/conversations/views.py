@@ -6,7 +6,9 @@ from django.http import JsonResponse
 from . import constants
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+User = get_user_model()
 # Create your views here.
 	# path('', view=views.Conversations, name="conversations"),
 	# path('search/', view=views.SearchConversations, name="conversation_search"),
@@ -18,14 +20,15 @@ def room(request):
 	return render(request, 'room.html', context)
 
 @login_required
+@csrf_exempt
 def Conversations(request):
 	if request.method == 'GET':
 		try:
 			page = int(request.GET.get('page'))
+			user = request.user
+			row = custom_sql_dictfetch_all(sqls.CONVERSATION_LIST_SQL,[user.id,user.id,page*constants.PAGE_SIZE])
 		except:
 			return JsonResponse( data={'err': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
-		user = request.user
-		row = custom_sql_dictfetch_all(sqls.CONVERSATION_LIST_SQL,[user.id,user.id,page*constants.PAGE_SIZE])
 		return JsonResponse({'conversationList':row}, safe=False, status=status.HTTP_200_OK)
 	if request.method == 'POST':
 		user = request.user
@@ -35,13 +38,12 @@ def Conversations(request):
 		convesrsation_with_user_id = request.POST.get('user_id')
 		try:
 			convesrsation_with_user = User.objects.get(id=convesrsation_with_user_id)
+			existConversation = custom_sql_dictfetch_all(sqls.CHECK_CONVERSATION_EXISTS_SQL,[user.id,convesrsation_with_user_id])
 		except:
 			return JsonResponse( data={'err': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
-		
-		existConversation = custom_sql_dictfetch_all(sqls.CHECK_CONVERSATION_EXISTS_SQL,[user.id,convesrsation_with_user_id])
 		if len(existConversation) > 0:
 			# 기존 대화방 존재
-			return redirect('conversations:detail', conversation_id=existConversation[0].get('conversation_id'))
+			return JsonResponse({"conversation_id": existConversation[0].get('conversation_id') }, safe=False, status=status.HTTP_201_CREATED)
 		# 새 대화방 생성
 		newConversation = Conversation(creator=user)
 		newConversation.save()
@@ -49,7 +51,7 @@ def Conversations(request):
 		otherParticipant = Participant(conversation=newConversation, participant_user=convesrsation_with_user)
 		myParticipant.save()
 		otherParticipant.save()
-		return redirect('conversations:detail', conversation_id=newConversation.id)
+		return JsonResponse({"conversation_id": newConversation.id }, safe=False, status=status.HTTP_201_CREATED)
 
 @login_required
 def SearchConversations(request):
@@ -57,9 +59,11 @@ def SearchConversations(request):
 		search_msg = request.GET.get('msg')
 		if search_msg is None or search_msg=="":
 			return JsonResponse({"conversations":[]}, safe=False, status=status.HTTP_400_BAD_REQUEST)
-		user = request.user
-		
-		row = custom_sql_dictfetch_all(sqls.SEARCH_MESSAGE_SQL,[user.id,user.id,'%'+search_msg+'%'])
+		try:
+			user = request.user
+			row = custom_sql_dictfetch_all(sqls.SEARCH_MESSAGE_SQL,[user.id,user.id,'%'+search_msg+'%'])
+		except:
+			return JsonResponse( data={'err': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
 		return JsonResponse({"conversations": list(row) }, safe=False, status=status.HTTP_201_CREATED)
 
 @login_required

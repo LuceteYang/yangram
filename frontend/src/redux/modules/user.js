@@ -233,6 +233,13 @@ function searchByTerm(searchTerm) {
     dispatch(setImageList(imageList));
   };
 }
+function searchByUsernameUsers(searchTerm) {
+  return async (dispatch, getState) => {
+    const { user: { token } } = getState();
+    const userList = await searchUsers(token, searchTerm);
+    dispatch(setUserList(userList));
+  };
+}
 
 function searchUsers(token, searchTerm) {
   return fetch(`/users/search/?username=${searchTerm}`, {
@@ -272,7 +279,8 @@ function searchImages(token, searchTerm) {
 // initial state
 const initialState = {
 	  isLoggedIn: localStorage.getItem("jwt") ? true : false,
-    token: localStorage.getItem("jwt")
+    token: localStorage.getItem("jwt"),
+    userList:[]
 }
 
 // reducer
@@ -386,7 +394,8 @@ const actionCreators = {
   followUser,
   unfollowUser,
   getExplore,
-  searchByTerm
+  searchByTerm,
+  searchByUsernameUsers
 };
 
 export { actionCreators };

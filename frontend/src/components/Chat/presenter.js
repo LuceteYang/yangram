@@ -1,14 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 import Ionicon from "react-ionicons";
 import Conversation from "components/Conversation";
+import SearchConversation from "components/SearchConversation";
+import ConversationAdd from "components/ConversationAdd";
 
 const Chat = (props, context) => (
   <div className={styles.conversationsContainer}>
       <div className={styles.conversationsColumn}>
     		<div className={styles.conversationsInfo}>
-		       안읽은 대화(1) 
+		       안읽은 대화({props.conversations.filter(function(x){return x.is_read!=0}).length}) 
 		       <div className={styles.btnNewMessage} onClick={props.newConversationShowFunc}><span>+ 새 메시지</span></div>
 	      </div>
          <div className={styles.conversationsSearch}>
@@ -26,12 +28,20 @@ const Chat = (props, context) => (
         <div className={styles.conversationsList} style={{minHeight: props.windowHeight-250, maxHeight: props.windowHeight-250}}>
             {
               props.searchInput.length > 0 && (
-                <SearchMessageSection/>
+                <div className={styles.searchMessageSection}>
+                  <SearchConversation />
+                </div>
               )
             }
             {
               props.searchInput.length === 0 && (
-                <UserConversationSection conversationList={props.conversationList} />
+                <div className={styles.userConversationSection}>
+                  <div className={styles.userConversations}>
+                      {props.conversations.map(conversation => {
+                        return (<Conversation conversation={conversation} key={conversation.conversation_id} />)
+                      })}
+                  </div>
+                </div>
               )
             }
         </div>
@@ -39,7 +49,10 @@ const Chat = (props, context) => (
       <div className={styles.messagesColumn}>
         {
           props.newConversationShow === true && (
-            <NewConversationSection windowHeight={props.windowHeight} />
+            <div className={styles.newConversationSection} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>
+                <ConversationAdd />
+            </div>
+            
           )
         }
         {
@@ -50,19 +63,8 @@ const Chat = (props, context) => (
       </div>
   </div>
 );
-const SearchMessageSection = props => <div className={styles.searchMessageSection}></div>;
 
-const UserConversationSection = props =>  (
-      <div className={styles.userConversationSection}>
-        <div className={styles.userConversations}>
-            {props.conversationList.map(conversation => (
-                <Conversation conversation={conversation} key={conversation.conversation_id} />
-            ))}
-        </div>
-      </div>
-    );
 
-const NewConversationSection = props =>  <div className={styles.newConversationSection} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>newConversationSection</div>
 const MessagesSection = props =>  (
     <div className={styles.messagesSection}>
     <div className={styles.recommendMessage} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>
@@ -74,11 +76,11 @@ const MessagesSection = props =>  (
 )
 
 Chat.propTypes = {
-  logout: PropTypes.func.isRequired
+  
 };
 
 Chat.contextTypes = {
-  t: PropTypes.func.isRequired
+  
 };
 
 export default Chat;
