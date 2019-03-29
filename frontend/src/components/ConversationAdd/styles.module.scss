@@ -3,6 +3,16 @@
 	padding: 1rem 24px;
 	line-height: 42px;
 	border-bottom:1px solid $border-color;
+	text-align: center;
+	.close-icon{
+		box-sizing:border-box;
+		float: right;
+		width: 35px;
+		height: 35px;
+		color: #999;
+		font-size: 1.3em;
+		cursor:pointer;
+	}
 }
 .users-search{
 	margin: 15px auto;

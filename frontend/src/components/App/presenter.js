@@ -9,7 +9,7 @@ import Feed from "components/Feed";
 import Explore from "components/Explore";
 import Search from "components/Search";
 import Profile from "components/Profile";
-import Chat from "components/Chat";
+import ChatContainer from "components/ChatContainer";
 
 
 const App = props => (
@@ -27,7 +27,7 @@ const PrivateRoutes = props => (
   <Switch>
     <Route exact path="/" component={Feed} />
     <Route path="/explore" component={Explore} />
-    <Route path="/chat" component={Chat} />
+    <Route path="/chat" component={ChatContainer} />
     <Route path="/search/:searchTerm" component={Search} />
     <Route path="/profile" component={Profile} />
   </Switch>

@@ -321,6 +321,7 @@ function applySetToken(state, action) {
 function applyLogout(state, action) {
   localStorage.removeItem("jwt");
   return {
+    ...state,
     isLoggedIn: false
   };
 }

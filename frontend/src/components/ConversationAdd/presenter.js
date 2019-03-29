@@ -5,7 +5,7 @@ import Ionicon from "react-ionicons";
 const ConversationAdd = (props, context) => (
   <>
     <div className={styles.newConversationTitle}>
-      새 메시지
+      <span>새 메시지</span><span onClick={()=>{props.newConversationShowFunc(false)}}><Ionicon className={styles.closeIcon} icon="ios-close"/></span>
     </div>
     <div className={styles.usersSearch}>
       <div className={styles.searchBox}>

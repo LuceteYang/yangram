@@ -1,79 +1,46 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
-import Ionicon from "react-ionicons";
-import Conversation from "components/Conversation";
-import SearchConversation from "components/SearchConversation";
-import ConversationAdd from "components/ConversationAdd";
 
 const Chat = (props, context) => (
-  <div className={styles.conversationsContainer}>
-      <div className={styles.conversationsColumn}>
-    		<div className={styles.conversationsInfo}>
-		       안읽은 대화({props.conversations.filter(function(x){return x.is_read!=0}).length}) 
-		       <div className={styles.btnNewMessage} onClick={props.newConversationShowFunc}><span>+ 새 메시지</span></div>
-	      </div>
-         <div className={styles.conversationsSearch}>
-            <div className={styles.searchBox}>
-                <Ionicon icon="ios-search-outline" className={styles.searchIcon}/>
-                <input 
-                  className={styles.searchInput} 
-                  type="text" 
-                  placeholder="대화 검색하기"
-                  value={props.searchConversationValue}
-                  onChange={props.handleInputChange}
-                 />
-            </div>
+  <>
+  /*<div style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>*/
+        <div className={styles.conversationInfo}>
+          {% for participant in other_participations %}
+                {{ participant.participant_user__display_name }} 
+                <span>
+                {% if participant.participant_user__business_field %}
+                  {{ participant.participant_user__business_field }}
+                {% endif %}
+                </span>
+          {% endfor %}
         </div>
-        <div className={styles.conversationsList} style={{minHeight: props.windowHeight-250, maxHeight: props.windowHeight-250}}>
-            {
-              props.searchInput.length > 0 && (
-                <div className={styles.searchMessageSection}>
-                  <SearchConversation />
-                </div>
-              )
-            }
-            {
-              props.searchInput.length === 0 && (
-                <div className={styles.userConversationSection}>
-                  <div className={styles.userConversations}>
-                      {props.conversations.map(conversation => {
-                        return (<Conversation conversation={conversation} key={conversation.conversation_id} />)
-                      })}
+        <div className={styles.messageList}>
+          <div className={styles.messages}>
+              {% for conv_message in conversation_messages reversed %}
+                <div class="{% if conv_message.is_mine == True %}self{% endif %} message" data-mid="{{conv_message.id}}">
+                  <div className={styles.content}>
+                    {{ conv_message.message| linebreaks | urlize | url_target_blank }}
+                  </div>
+                  <div className={styles.messageDate}>
+                    {{ conv_message.created_at |date:'H:i' | customtime }}
                   </div>
                 </div>
-              )
-            }
+                {% with previous_element=conversation_messages|reversePrevious:forloop.counter0 %}
+                  {{ previous_element |safe}}
+                {% endwith %}
+              {% endfor %}  
+          </div>
         </div>
-      </div>
-      <div className={styles.messagesColumn}>
-        {
-          props.newConversationShow === true && (
-            <div className={styles.newConversationSection} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>
-                <ConversationAdd />
-            </div>
-            
-          )
-        }
-        {
-          props.newConversationShow === false && (
-            <MessagesSection windowHeight={props.windowHeight} />
-          )
-        }
-      </div>
-  </div>
+        <div className={styles.messageFormSection}>
+            <form id="message-form" className={styles.messageForm} action="/conversations/{{other_participations.0.conversation_id}}/message/" method="post">
+              {% csrf_token %}
+                  <textarea id="conversation-message-input" className={styles.message} name="message" placeholder="메시지 입력" required></textarea>
+                  <div id="btn-send-message">보내기</div>
+            </form>
+          </div>
+  </>
 );
-
-
-const MessagesSection = props =>  (
-    <div className={styles.messagesSection}>
-    <div className={styles.recommendMessage} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>
-      <span className={styles.message}>
-        새 메시지를 눌러서 대화를 시작해보세요!
-      </span>
-    </div>
-  </div>
-)
 
 Chat.propTypes = {
   

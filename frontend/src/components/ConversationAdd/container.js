@@ -39,6 +39,7 @@ class Container extends Component {
               let stringData = querystring.stringify({"user_id":data.id});
               axios.post(`/conversations/`,stringData,axiosConfig)
                 .then(res => {
+                  this.props.newConversationShowFunc(false)
                   this.props.goChat(res.data.conversation_id)
                 })
           }
@@ -51,10 +52,9 @@ class Container extends Component {
     });
   }
   render() {
-    console.log(this.props)
     return <ConversationAdd 
-    	{...this.props}
-        {...this.state}
+      {...this.props}
+      {...this.state}
     	handleInputChange={this._handleInputChange}
       addConversation={this._addConversation}
 	/>;
