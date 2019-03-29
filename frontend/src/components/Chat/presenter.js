@@ -4,44 +4,40 @@ import styles from "./styles.module.scss";
 
 const Chat = (props, context) => (
   <>
-  /*<div style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>*/
-        <div className={styles.conversationInfo}>
-          {% for participant in other_participations %}
-                {{ participant.participant_user__display_name }} 
-                <span>
-                {% if participant.participant_user__business_field %}
-                  {{ participant.participant_user__business_field }}
-                {% endif %}
-                </span>
-          {% endfor %}
-        </div>
-        <div className={styles.messageList}>
-          <div className={styles.messages}>
-              {% for conv_message in conversation_messages reversed %}
-                <div class="{% if conv_message.is_mine == True %}self{% endif %} message" data-mid="{{conv_message.id}}">
-                  <div className={styles.content}>
-                    {{ conv_message.message| linebreaks | urlize | url_target_blank }}
-                  </div>
-                  <div className={styles.messageDate}>
-                    {{ conv_message.created_at |date:'H:i' | customtime }}
-                  </div>
-                </div>
-                {% with previous_element=conversation_messages|reversePrevious:forloop.counter0 %}
-                  {{ previous_element |safe}}
-                {% endwith %}
-              {% endfor %}  
-          </div>
-        </div>
-        <div className={styles.messageFormSection}>
-            <form id="message-form" className={styles.messageForm} action="/conversations/{{other_participations.0.conversation_id}}/message/" method="post">
-              {% csrf_token %}
-                  <textarea id="conversation-message-input" className={styles.message} name="message" placeholder="메시지 입력" required></textarea>
-                  <div id="btn-send-message">보내기</div>
-            </form>
-          </div>
-  </>
-);
+    <div className={styles.conversationInfo}>
+      { props.participatantInfo.participant_user__username}
+    </div>
+    <div className={styles.messageList} style={{minHeight: props.windowHeight-340, maxHeight: props.windowHeight-340}}>
+      <div className={styles.messages} ref={props.refProp}>
+        {props.chatMessages.map(message => {
+          return (<Message message={message} participantId={props.participatantInfo.participant_user__id} key={message.id} />)
+        })}
+      </div>
+    </div>
+    <div className={styles.messageFormSection}>
+      <form id="message-form" className={styles.messageForm} action="/conversations/{{other_participations.0.conversation_id}}/message/" method="post">
+        <textarea id="conversation-message-input" className={styles.message} name="message" placeholder="메시지 입력" required></textarea>
+        <div className={styles.btnSendMessage}>보내기</div>
+      </form>
+    </div>
+</>
+  )
+const Message =  props =>  {
+  const completedClass = props.participantId==props.message.participant__participant_user__id ? '' : styles.self;
 
+  return(
+    <div className={ `${styles.message} ${completedClass}`}>
+    <div className={styles.content}>
+      {props.participantId}
+      {props.message.message}
+      {props.message.participant__participant_user__id}
+    </div>
+    <div className={styles.messageDate}>
+      {props.message.created_at}
+    </div>
+  </div>
+)
+}
 Chat.propTypes = {
   
 };

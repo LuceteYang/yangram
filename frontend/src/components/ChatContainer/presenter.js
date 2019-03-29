@@ -50,7 +50,7 @@ const ChatContainer = (props, context) => (
       <div className={styles.messagesColumn}>
         {
           props.newConversationShow === false && (
-            <Route path="/chat/:id" component={() => <Chat windowHeight={props.windowHeight} />}/>
+            <Route exact path="/chat/:cid" render={(routeProps) => <Chat {...routeProps} windowHeight={props.windowHeight} />}/>
           )
         }
         {
@@ -58,12 +58,11 @@ const ChatContainer = (props, context) => (
             <div className={styles.newConversationSection} style={{minHeight: props.windowHeight-105, maxHeight: props.windowHeight-105}}>
                 <ConversationAdd newConversationShowFunc={props.newConversationShowFunc}/>
             </div>
-            
           )
         }
         {
           props.newConversationShow === false && (
-            <Route exact path="/chat" component={() => <MessagesSection windowHeight={props.windowHeight} />}/>
+            <Route exact path="/chat" render={() => <MessagesSection windowHeight={props.windowHeight} />}/>
           )
         }
       </div>

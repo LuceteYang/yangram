@@ -79,7 +79,7 @@ def ConversationMessage(request,conversation_id):
 		if last_message_id>0:
 			field_value_pairs.append(('id__lt', last_message_id))
 		filter_options = {k:v for k,v in field_value_pairs if v}
-		conversation_messages =  Message.objects.filter(
+		conversation_messages =  reversed(Message.objects.filter(
 									**filter_options
 								).select_related(
 									'participant',
@@ -90,7 +90,7 @@ def ConversationMessage(request,conversation_id):
 									'created_at',
 									'message_type',
 									'participant__participant_user__id'
-								).order_by('-id')[:constants.PAGE_SIZE]
+								).order_by('-id')[:constants.PAGE_SIZE])
 		other_participations=[]
 		if last_message_id==0:
 			other_participations = Participant.objects.filter(
@@ -101,6 +101,7 @@ def ConversationMessage(request,conversation_id):
 								'participant_user'
 							).values(
 								'conversation_id',
+								'participant_user__id',
 								'participant_user__username', 
 								'participant_user__profile_image'
 							)
