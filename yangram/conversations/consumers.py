@@ -5,14 +5,11 @@ from channels.db import database_sync_to_async
 from . import models
 from yangram.users import models as user_model
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
 	def check_participant(self,room_name,user):
 		participation_info = get_object_or_404(models.Participant, conversation_id=room_name, participant_user=user)
-		participation_info.last_read_date = timezone.now()
-		participation_info.save()
 		return participation_info
 	
 	@database_sync_to_async

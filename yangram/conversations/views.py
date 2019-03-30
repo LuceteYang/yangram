@@ -9,11 +9,8 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 User = get_user_model()
-# Create your views here.
-	# path('', view=views.Conversations, name="conversations"),
-	# path('search/', view=views.SearchConversations, name="conversation_search"),
-	# path('<int:conversation_id>/', view=views.ConversationDetail, name="conversation_detail"),
-	# path('<int:conversation_id>/messages/', view=views.ConversationMessage, name="conversation_messages"),
+from django.utils import timezone
+
 # Create your views here.
 def room(request):
 	context = {}
@@ -93,6 +90,8 @@ def ConversationMessage(request,conversation_id):
 								).order_by('-id')[:constants.PAGE_SIZE])
 		other_participations=[]
 		if last_message_id==0:
+			participation_info.last_read_date = timezone.now()
+			participation_info.save()
 			other_participations = Participant.objects.filter(
 								conversation_id=conversation_id
 							).exclude(

@@ -7,8 +7,8 @@ const Chat = (props, context) => (
     <div className={styles.conversationInfo}>
       { props.participatantInfo.participant_user__username}
     </div>
-    <div className={styles.messageList} style={{minHeight: props.windowHeight-340, maxHeight: props.windowHeight-340}}>
-      <div className={styles.messages} ref={props.refProp}>
+    <div id="message-container" ref={props.refProp} className={styles.messageList} style={{minHeight: props.windowHeight-340, maxHeight: props.windowHeight-340}}>
+      <div className={styles.messages}>
         {props.chatMessages.map(message => {
           return (<Message message={message} participantId={props.participatantInfo.participant_user__id} key={message.id} />)
         })}
@@ -28,9 +28,7 @@ const Message =  props =>  {
   return(
     <div className={ `${styles.message} ${completedClass}`}>
     <div className={styles.content}>
-      {props.participantId}
       {props.message.message}
-      {props.message.participant__participant_user__id}
     </div>
     <div className={styles.messageDate}>
       {props.message.created_at}
