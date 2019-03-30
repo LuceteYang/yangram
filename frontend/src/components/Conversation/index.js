@@ -19,7 +19,7 @@ const Conversation = (props, context) => {
     <div className={styles.content}>
         <span className={styles.name}>{parseUserList[0].username}</span>
       <div className={styles.meta}>
-        {props.conversation.message_created_at}
+        {props.conversation.message_created_time}
       </div>
       <div className={styles.messageData}>
         {props.conversation.message || "아직 대화 내용이 없습니다."}

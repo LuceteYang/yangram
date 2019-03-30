@@ -2,9 +2,10 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from channels.db import database_sync_to_async
-from . import models
+from . import models, serializers
 from yangram.users import models as user_model
 from django.shortcuts import get_object_or_404
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 class ChatConsumer(AsyncWebsocketConsumer):
 	@database_sync_to_async
@@ -16,17 +17,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 	def addMessage(self,room_name,participant, message):
 		newMessage = models.Message(message=message,participant=participant,conversation_id=room_name)
 		newMessage.save()
-		conversation_message =  models.Message.objects.select_related(
-							'participant',
-							'participant__participant_user'
-						).values(
-							'id',
-							'message',
-							'created_at',
-							'message_type',
-							'participant__participant_user__id'
-						).get(id=newMessage.id)
-		return  conversation_message
+		conversation_message =  models.Message.objects.get(id=newMessage.id)
+		serializer = serializers.FeedUserSerializer(conversation_message)
+		return  serializer.data
 	async def connect(self):
 		if self.scope["user"].is_anonymous:
 			print("not connect anonymouse user")
@@ -63,7 +56,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 		try:
 			newMessages = await self.addMessage(self.room_name, self.participant, message)
 			# Send message to room group
-			newMessages['created_at'] = newMessages['created_at'].strftime("%Y-%m-%d %H:%M:%S")		
+			# newMessages['created_at'] = newMessages['created_at'].strftime("%Y-%m-%d %H:%M:%S")		
+			# newMessages['created_time'] = naturaltime(newMessages['created_at'])
 			await self.channel_layer.group_send(
 				self.room_group_name,
 				{

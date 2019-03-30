@@ -17,6 +17,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     resetMessageList: () =>{
 		  dispatch(chatActions.resetMessageList());	
+    },
+    addBackMessageList: (messge) =>{
+      dispatch(chatActions.addBackMessageList(messge)); 
     }
   };
 };

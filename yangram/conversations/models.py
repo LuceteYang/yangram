@@ -1,5 +1,6 @@
 from django.db import models, connection
 from django.conf import settings
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 MESSAGE_TYPE = (
 	(0, 'Text'),
@@ -23,6 +24,10 @@ class Conversation(models.Model):
 	
 	def __str__(self):
 		return '{} , {}'.format(self.id, self.creator.username)
+	@property
+	def created_time(self):
+		return naturaltime(self.created_at)
+
 
 class Participant(models.Model):
 	conversation = models.ForeignKey(Conversation, null=True, related_name="participants", on_delete=models.SET_NULL)
@@ -44,3 +49,7 @@ class Message(models.Model):
 
 	def __str__(self):
 		return self.message
+
+	@property
+	def created_time(self):
+		return naturaltime(self.created_at)		

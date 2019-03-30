@@ -1,36 +1,33 @@
 from rest_framework import serializers
 from . import models
-from yangram.users import models as user_models
+from yangram.users import models as user_model
 
-
-class MessageUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
 
 	class Meta:
-		model = user_models.User
+		model = user_model.User
 		fields = (
-			'profile_image',
-			'display_name',
+			'id',
+			'username',
+			'profile_image'
 		)
 
 class ParticipantSerializer(serializers.ModelSerializer):
-	participant_user = MessageUserSerializer(read_only = True)
+	participant_user = UserSerializer()
 	class Meta:
 		model = models.Participant
 		fields = (
-			'id',
 			'participant_user',
 		)
 
-
-class InputMessageSerializer(serializers.ModelSerializer):
-	participant = ParticipantSerializer(read_only = True)
+class FeedUserSerializer(serializers.ModelSerializer):
+	participant = ParticipantSerializer()
 	class Meta:
 		model = models.Message
-		
 		fields = (
 			'id',
 			'message',
+			'created_time',
 			'message_type',
-			'participant',
-			'created_at'
+			'participant'
 		)

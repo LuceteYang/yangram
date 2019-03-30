@@ -25,7 +25,7 @@ const ConversationResult = props => {
       <div className={styles.content}>
         <span className={styles.name}>{parseUserList[0].username}</span>
       <div className={styles.meta}>
-        {props.conversation.message_created_at}
+        {props.conversation.message_created_time}
       </div>
       <div className={styles.messageData}>
         {props.conversation.message}

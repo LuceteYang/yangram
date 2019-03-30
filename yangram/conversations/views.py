@@ -1,16 +1,16 @@
 from django.shortcuts import render
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from yangram.conversations.models import *
-from . import sqls
 from django.http import JsonResponse
-from . import constants
+from . import constants, sqls, serializers
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django.utils import timezone
-
+from django.contrib.humanize.templatetags.humanize import naturaltime
 # Create your views here.
 def room(request):
 	context = {}
@@ -24,7 +24,10 @@ def Conversations(request):
 			page = int(request.GET.get('page'))
 			user = request.user
 			row = custom_sql_dictfetch_all(sqls.CONVERSATION_LIST_SQL,[user.id,user.id,page*constants.PAGE_SIZE])
-		except:
+			for item in row:
+				item.update( {'message_created_time':naturaltime(item['message_created_at'])})
+		except Exception as inst:
+			print(inst)
 			return JsonResponse( data={'err': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
 		return JsonResponse({'conversationList':row}, safe=False, status=status.HTTP_200_OK)
 	if request.method == 'POST':
@@ -59,6 +62,8 @@ def SearchConversations(request):
 		try:
 			user = request.user
 			row = custom_sql_dictfetch_all(sqls.SEARCH_MESSAGE_SQL,[user.id,user.id,'%'+search_msg+'%'])
+			for item in row:
+				item.update( {'message_created_time':naturaltime(item['message_created_at'])})
 		except:
 			return JsonResponse( data={'err': 'bad request'}, status=status.HTTP_400_BAD_REQUEST)
 		return JsonResponse({"conversations": list(row) }, safe=False, status=status.HTTP_201_CREATED)
@@ -76,32 +81,19 @@ def ConversationMessage(request,conversation_id):
 		if last_message_id>0:
 			field_value_pairs.append(('id__lt', last_message_id))
 		filter_options = {k:v for k,v in field_value_pairs if v}
-		conversation_messages =  reversed(Message.objects.filter(
+		test_conversation_messages =  reversed(Message.objects.filter(
 									**filter_options
-								).select_related(
-									'participant',
-									'participant__participant_user'
-								).values(
-									'id',
-									'message',
-									'created_at',
-									'message_type',
-									'participant__participant_user__id'
 								).order_by('-id')[:constants.PAGE_SIZE])
+		serializer = serializers.FeedUserSerializer(test_conversation_messages, many=True)
 		other_participations=[]
 		if last_message_id==0:
 			participation_info.last_read_date = timezone.now()
 			participation_info.save()
-			other_participations = Participant.objects.filter(
-								conversation_id=conversation_id
-							).exclude(
-								participant_user=request.user
-							).select_related(
-								'participant_user'
-							).values(
-								'conversation_id',
-								'participant_user__id',
-								'participant_user__username', 
-								'participant_user__profile_image'
-							)
-		return JsonResponse({'conversation_messages':list(conversation_messages),'other_participations':list(other_participations)}, safe=False, status=status.HTTP_200_OK)
+			other_participations_data = Participant.objects.filter(
+									conversation_id=conversation_id
+								).exclude(
+									participant_user=request.user
+								)
+			userInfo_serializer = serializers.ParticipantSerializer(other_participations_data, many=True)
+			other_participations = userInfo_serializer.data
+		return JsonResponse({'conversation_messages':serializer.data,'other_participations':other_participations}, safe=False, status=status.HTTP_200_OK)
