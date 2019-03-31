@@ -4,6 +4,12 @@ import Container from "./container";
 import { push } from "react-router-redux";
 
 
+const mapStateToProps = (state, ownProps) => {
+  const { user: { token } } = state;
+  return {
+    token
+  };
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	
@@ -14,4 +20,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
   };
 };
-export default connect(null, mapDispatchToProps)(Container);
+export default connect(mapStateToProps, mapDispatchToProps)(Container);

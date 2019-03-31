@@ -6,6 +6,12 @@ from yangram.notifications import views as notification_views
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
 
+class UnserInfo(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        serializer = serializers.ListUserSerializer(user)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
 class ExploreUsers(APIView):
 
     def get(self, request, format=None):

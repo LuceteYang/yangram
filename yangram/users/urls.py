@@ -5,6 +5,11 @@ from . import views
 app_name = "users"
 urlpatterns = [
     url(
+        regex=r'^$',
+        view=views.UnserInfo.as_view(),
+        name='user_info'
+    ),
+    url(
         regex=r'^explore/$',
         view=views.ExploreUsers.as_view(),
         name='explore_users'

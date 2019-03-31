@@ -25,6 +25,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+    def save(self, *args, **kwargs):
+        if self.pk:
+            user = User.objects.get(pk=self.pk)
+            if user.profile_image != self.profile_image:
+                user.profile_image.delete(save=False)
+        super(User, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
