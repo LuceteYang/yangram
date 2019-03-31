@@ -14,7 +14,7 @@ Link: [https://yangram.societyang.xyz](https://yangram.societyang.xyz)
 
 ## Libraries / Tools
 
-Django, Mysql, React, Redux Ducks, Docker(nginx & gunicorn), AWS(EC2, ELB, CloudFront, Route53)
+Django, Channels, React, Redux Ducks, Websocket, Docker(nginx & daphne & redis), AWS(EC2, ELB, CloudFront, Route53)
 
 <img src="./yangram/static/images/skills.jpg" width="500" />
 
@@ -37,3 +37,9 @@ Docker(nginx & gunicorn), EC2, ELB, CloudFront, Route53
 
 ###### Summary
 [https://github.com/LuceteYang/django-docker-deploy](https://github.com/LuceteYang/django-docker-deploy)
+
+## Reference
+#### Channels
+[https://channels.readthedocs.io/en/latest/deploying.html](https://channels.readthedocs.io/en/latest/deploying.html)
+####  daphne와 asgi를 이용한 Django Channles 배포
+[https://darkblank.github.io/development/Deploy-channels](https://darkblank.github.io/development/Deploy-channels)
