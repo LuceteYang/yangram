@@ -24,9 +24,6 @@ class Container extends Component {
 	}
 	_onChange = (e) =>{
 	    const files = Array.from(e.target.files)
-	    console.log(files)
-	    // this.setState({ uploading: true })
-
 	    const formData = new FormData()
 
 	    files.forEach((file, i) => {

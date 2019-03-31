@@ -58,7 +58,6 @@ class Container extends Component {
   loading = true
   handleScroll =  (event)=> {
     if(this.myRef.current.scrollTop<2){
-      console.log(this.loading)
       if(this.loading){
         const { getMessageList } = this.props;
         this.loading=false;
@@ -70,7 +69,7 @@ class Container extends Component {
   }
   ws
   _connectwebsocket(cid){
-    const webURL = `ws://localhost:8000/ws/chat/${cid}/`
+    const webURL = `ws://${window.location.host}/ws/chat/${cid}/`
     this.ws = new WebSocket(webURL)
     this.ws.onopen = () => {
       // on connecting, do nothing but log it to the console
