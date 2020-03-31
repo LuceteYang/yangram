@@ -8,10 +8,6 @@ Cloning Instagram with Python Django
 
 2019. 02
 
-## Site
-
-Link: [https://yangram.societyang.xyz](https://yangram.societyang.xyz)
-
 ## Libraries / Tools
 
 Django, Channels, React, Redux Ducks, Websocket, Docker(nginx & daphne & redis), AWS(EC2, ELB, CloudFront, Route53)
